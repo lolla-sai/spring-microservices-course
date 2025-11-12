@@ -1,0 +1,10 @@
+.vscode
+.idea
+
+target/
+mongo_data/
+order-service/run.txt
+
+# Ignore all application.properties files which contain sensitive information
+product-service/**/*/application.properties
+order-service/**/*/application.properties

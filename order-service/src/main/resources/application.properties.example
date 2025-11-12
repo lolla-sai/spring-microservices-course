@@ -1,0 +1,16 @@
+spring.application.name=order-service
+# we have to pass allowPublicKeyRetrieval=true, otherwise we will get an authentication error
+# this is not recommended for production environments
+spring.datasource.url=jdbc:mysql://{url:port}/{database}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+spring.datasource.username={username}
+spring.datasource.password={password}
+
+# For production, consider using a migration tool like Flyway or Liquibase and set this to 'validate' or 'none'
+spring.jpa.hibernate.ddl-auto=update
+
+spring.jpa.show-sql=true
+logging.level.org.springframework=DEBUG
+logging.level.com.courses.spring_boot_microservices.order=DEBUG
+
+# this is to avoid conflicts when running multiple services locally
+server.port=8082

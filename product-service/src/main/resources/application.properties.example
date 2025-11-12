@@ -1,0 +1,6 @@
+spring.application.name=product-service
+spring.data.mongodb.uri=mongodb://{username}:{password}@{url:port}/{database}?authSource=admin
+spring.data.mongodb.username={username}
+spring.data.mongodb.password={password}
+logging.level.org.springframework=DEBUG
+logging.level.com.courses.spring_boot_microservices.product=DEBUG

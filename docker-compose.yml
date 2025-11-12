@@ -1,0 +1,75 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb_container
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: productdb
+    restart: always
+    networks:
+      - product_service_network
+
+  mysqldb_order:
+    image: mysql:latest
+    container_name: mysqldb_order_container
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: orderdb
+    volumes:
+      - mysqldb_order_data:/var/lib/mysql
+    restart: always
+    networks:
+      - network1
+
+  product_service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    container_name: product_service_container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    environment:
+      # ******
+      # we have to pass the url as @mongodb:27017 instead of localhost because mongodb is another container,
+      # and each container has its own localhost
+      # this is how docker networking works
+      # ******
+      # one more interesting concept used here is overriding spring properties using environment variables
+      SPRING_DATA_MONGODB_URI: mongodb://root:password@mongodb:27017/productdb?authSource=admin
+    restart: always
+    networks:
+      - product_service_network
+
+  # order_service:
+  #   build:
+  #     context: ./order-service
+  #     dockerfile: Dockerfile
+  #   container_name: order_service_container
+  #   ports:
+  #     - "8081:8081"
+  #   depends_on:
+  #     - mysqldb_order
+  #   restart: always
+  #   networks:
+  #     - network1
+
+volumes:
+  mongo_data:
+  mysqldb_order_data:
+
+networks:
+  network1:
+    driver: bridge
+  product_service_network:
+    driver: bridge
