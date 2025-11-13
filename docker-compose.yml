@@ -51,18 +51,20 @@ services:
     networks:
       - product_service_network
 
-  # order_service:
-  #   build:
-  #     context: ./order-service
-  #     dockerfile: Dockerfile
-  #   container_name: order_service_container
-  #   ports:
-  #     - "8081:8081"
-  #   depends_on:
-  #     - mysqldb_order
-  #   restart: always
-  #   networks:
-  #     - network1
+  order_service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    container_name: order_service_container
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysqldb_order
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://@mysqldb_order:3306/orderdb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    restart: always
+    networks:
+      - network1
 
 volumes:
   mongo_data:
