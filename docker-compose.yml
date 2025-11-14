@@ -29,6 +29,22 @@ services:
     restart: always
     networks:
       - network1
+  
+  mysqldb_inventory:
+    image: mysql:latest
+    container_name: mysqldb_inventory_container
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: inventorydb
+    volumes:
+      - mysqldb_inventory_data:/var/lib/mysql
+    restart: always
+    networks:
+      - network3
 
   product_service:
     build:
@@ -69,9 +85,12 @@ services:
 volumes:
   mongo_data:
   mysqldb_order_data:
+  mysqldb_inventory_data:
 
 networks:
   network1:
     driver: bridge
   product_service_network:
+    driver: bridge
+  network3:
     driver: bridge
